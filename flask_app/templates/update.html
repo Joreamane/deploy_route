@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="../static/javascript/script.js"></script>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <title>Route Tracker</title>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <h1 class="navbar-brand">Climbing Route Tracker</h1>
+            <h3 class="navbar-brand">A place to keep track of your awesome sends!</h3>
+            <div class="right-nav" style="display: flex; width: 20%; justify-content: space-evenly">
+                <form action="/dashboard" method="get">
+                    <input type="submit" Value="Dashboard" class="btn btn-secondary">
+                </form>
+                <form action="/create" method="get">
+                    <input type="submit" value="Add a climb" class="btn btn-secondary">
+                </form>
+                <form action="/logout" method="post">
+                    <input type="submit" value="Logout" class="btn btn-secondary">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Update climb</h1>
+        <h3>Currently editing {{route[0].name}}</h2>
+
+        <div style="background-color:rgba(147, 112, 216, 0.438); padding: 2%">
+            <div>
+                {% with route_creation = get_flashed_messages(category_filter = ['route_creation']) %}
+                    {% if route_creation %}
+                        <div class="alert alert-dismissible alert-danger">
+                            <h3>Route Log Error:</h2>
+                            {% for msg in route_creation %}
+                                <p>{{msg}}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            <form action="/update/{{route[0].id}}" method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label"><strong>Name:</strong></label>
+                    <input type="text" name="name" class="form-control" id="name" value="{{route[0].name}}">
+                </div>
+                <div class="mb-3">
+                    <label for="crag" class="form-label"><strong>Location (example: Joshua Tree, Red Rock Canyon, Squamish):</strong></label>
+                    <input type="text" name="crag" class="form-control" id="crag" value="{{route[0].crag}}">
+                </div>
+                <div class="mb-3">
+                    <label for="type" class="form-label"><strong>Type of climb:</strong></label>
+                    <select name="type" id="type" class="form-select">
+                        <option value="" selected>Select a type</option>
+                        <option value="Boulder">Boulder</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Trad">Trad</option>
+                        <option value="Toprope">Toprope</option>
+                        <option value="Ice">Ice</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="difficulty" class="form-label"><strong>Difficulty:</strong></label>
+                    <select name="difficulty" id="difficulty" class="form-select">
+                        <option value="" selected>Select a difficulty</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="rating" class="form-label"><strong>Quality rating:</strong></label>
+                    <select name="rating" id="rating" class="form-select" selected="{{route[0].rating}}">
+                        <option >Select a rating</option>
+                        <option value="1 Star">1 Star</option>
+                        <option value="2 Star">2 Star</option>
+                        <option value="3 Star">3 Star</option>
+                        <option value="4 Star">4 Star</option>
+                        <option value="5 Star">5 Star</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="danger" class="form-label"><strong>Danger Level or Risk:</strong></label>
+                    <select name="danger" id="danger" class="form-select">
+                        <option value="" selected>Select a danger level</option>
+                        <option value="G">G (no risk at all)</option>
+                        <option value="PG">PG (pay attention and you'll be fine)</option>
+                        <option value="PG 13">PG 13 (you should have some experience before hopping on)</option>
+                        <option value="R">R (you will most likely get hurt if you do not know what you are doing)</option>
+                        <option value="X">X (falls will sometimes result in injury)</option>
+                        <option value="X+">X+ (injury and death are both possibilities in the event of falls)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="mountain_project" class="form-label"><strong>Mountain Project link (optional):</strong></label>
+                    <input type="text" name="mountain_project" class="form-control" id="mountain_project" value="{{route[0].mountain_project}}">
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label"><strong>Comments (optional):</strong></label>
+                    <textarea name="comment" class="form-control" id="comment">{{route[0].comment}}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="date_completed" class="form-label"><strong>Date Completed:</strong></label>
+                    <input type="date" name="date_completed" class="form-control" id="date_completed" value="{{route[0].date_completed}}">
+                </div>
+                <button type='submit' class="btn btn-primary">Update climb</button>
+            </form>
+        </div>
+    </div>
+    <!-- <nav class="navbar navbar-dark bg-primary" style="position: fixed; bottom:0%; width:100%">
+        <div class="container-fluid" style="justify-content: center">
+            <h1 class="navbar-brand" style="align-self: center">Created by EricFallon</h1>
+        </div>
+    </nav> -->
+</body>
+</html>

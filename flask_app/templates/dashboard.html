@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>Route Tracker</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <h1 class="navbar-brand">Climbing Route Tracker</h1>
+            <h3 class="navbar-brand">A place to keep track of your awesome sends!</h3>
+            <div class="right-nav" style="display: flex; width: 20%; justify-content: space-evenly">
+                <form action="/dashboard" method="get">
+                    <input type="submit" Value="Dashboard" class="btn btn-secondary">
+                </form>
+                <form action="/create" method="get">
+                    <input type="submit" value="Add a climb" class="btn btn-secondary">
+                </form>
+                <form action="/logout" method="post">
+                    <input type="submit" value="Logout" class="btn btn-secondary">
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Welcome, {{session['first_name']}}</h1>
+        <h3>Here are all of your friends' recent climbs!</h3>
+        {% with route = get_flashed_messages(category_filter = ['route']) %}
+                {% if route %}
+                    {% for msg in route %}
+                        <div class="alert alert-dismissible alert-success">
+                            <p>{{msg}}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        <div class="routes-container">
+            <table class="table table-bordered table-secondary">
+                <thead>
+                    <tr>
+                        <th scope="col">Climber</th>
+                        <th scope="col">Route Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Date completed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for route in all_routes %}
+                    <tr>
+                        <td>{{route.creator.first_name}}</td>
+                        <td><a href="/viewroute/{{route.id}}">{{route.name}}</a></td>
+                        <td>{{route.type}}</td>
+                        <td>{{route.date_completed}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <nav class="navbar navbar-dark bg-primary" style="position: fixed;bottom:0%;width: 100%;">
+        <div class="container-fluid" style="justify-content: center">
+            <h1 class="navbar-brand" style="align-self: center">Created by Eric Fallon</h1>
+        </div>
+    </nav>
+</body>
+</html>

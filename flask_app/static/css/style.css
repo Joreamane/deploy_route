@@ -1,0 +1,25 @@
+.body{
+    margin: 20px 40px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: left;
+    padding-top: 15px;
+}
+
+.flash-container {
+    width:fit-content;
+    background-color: rgb(226, 133, 133); 
+    margin-top: 15px; 
+    padding: 20px;
+    padding-right: 200px;
+    border: 2px dashed black;
+    border-radius: 15px;
+}
+
+.inner-container{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}

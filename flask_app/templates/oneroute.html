@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <h1 class="navbar-brand">Climbing Route Tracker</h1>
+            <h3 class="navbar-brand">A place to keep track of your awesome sends!</h3>
+            <div class="right-nav" style="display: flex; width: 20%; justify-content: space-evenly">
+                <form action="/dashboard" method="get">
+                    <input type="submit" Value="Dashboard" class="btn btn-secondary">
+                </form>
+                <form action="/create" method="get">
+                    <input type="submit" value="Add a climb" class="btn btn-secondary">
+                </form>
+                <form action="/logout" method="post">
+                    <input type="submit" value="Logout" class="btn btn-secondary">
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1><strong><em>{{route[0].name}}</em></strong></h1> 
+        <p>Climbed by {{route[0].first_name}}</p>
+        {% with comment = get_flashed_messages(category_filter = ['comment']) %}
+                {% if comment %}
+                    {% for msg in comment %}
+                        <div class="alert alert-dismissible alert-success">
+                            <p>{{msg}}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        <!-- below is the container for the info and the comments -->
+        <div style="display: flex; flex-direction:row">
+            <div class="inner-container" style="display: flex">
+                <div>
+                    <div>
+                        <h4>Type:</h4>
+                        <h6> {{route[0].type}}</h6>
+                    </div>
+                    <div>
+                        <h4>Location:</h4>
+                        <h6> {{route[0].crag}}</h6>
+                    </div>
+                    <div>
+                        <h4>Date Climbed:</h4>
+                        <h6> {{route[0].date_completed}}</h6>
+                    </div>
+                    <div>
+                        <h4>Difficulty and Danger:</h4>
+                        <h6> {{route[0].difficulty}} {{route[0].danger}}</h6>
+                    </div>
+                    <div>
+                        <h4>Rating:</h4>
+                        <h6> {{route[0].rating}}</h6>
+                    </div>
+                    <div>
+                        <h4>Mountain Project Link:</h4> 
+                        <h6></h6><a href="{{route[0].mountain_project}}">Click here to check it out!</a></h6>
+                    </div>
+                    <div>
+                        <h4>{{route[0].first_name}}'s comments:</h4> 
+                        <h6>{{route[0].comment}}</h6>
+                    </div>
+                    <div class="button-container">
+                        {% if session['user_id'] == route[0].user_id %}
+                        <form style="padding-right:15px;" action="/delete/{{route[0].id}}" method="get">
+                            <input type="submit" value="Delete Climb" class="btn btn-primary">
+                        </form>
+                        <form action="/update/{{route[0].id}}" method="get">
+                            <input type="submit" value="Edit Climb" class="btn btn-primary">
+                        </form>
+                        {% else %}
+                        <div class="inner-container">
+                            <form action="/viewroute/{{route[0].id}}/comment" method="post" style="display:flex;flex-direction: column">
+                                <label for="guest_comment">Add a comment:</label>
+                                <textarea name="guest_comment" id="guest_comment" style="flex:1"></textarea>
+                                <button type='submit' class="btn btn-primary">Add Comment!</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="inner-container">
+                <h4>Comments:</h4>
+                {% for comment in all_comments %}
+                    <div class="card text-white bg-secondary mb-3">
+                        <div class="card-header"><strong>{{comment.creator.first_name}} {{comment.creator.last_name}} says:</strong></div>
+                        <div class="card-body">
+                            <p class="card-text">{{comment.guest_comment}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-dark bg-primary" style="position: fixed;bottom:0%;width: 100%;">
+        <div class="container-fluid" style="justify-content: center">
+            <h1 class="navbar-brand" style="align-self: center">Created by Eric Fallon</h1>
+        </div>
+    </nav>
+</body>
+</html>
